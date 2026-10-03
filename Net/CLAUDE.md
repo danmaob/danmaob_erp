@@ -41,6 +41,7 @@ This file contains only permanent rules and verified facts. The work for each ta
 | `src/DanmaobErp.Infrastructure/` | Infrastructure layer |
 | `src/DanmaobErp.Api/` | ASP.NET Core Web API (controllers) |
 | `tests/DanmaobErp.ArchitectureTests/` | Architecture tests |
+| `tests/DanmaobErp.Api.Tests/` | API tests: unit tests of API classes and integration tests that host the API in memory with `WebApplicationFactory<Program>` |
 | `docs/adr/` | Architecture Decision Records (read only when a prompt names one) |
 
 The folder name, project name and root namespace of every project are identical. A namespace always follows the folder path below its project folder.
@@ -65,9 +66,18 @@ Domain and Application never reference Entity Framework Core or ASP.NET Core pac
 - `ImplicitUsings` is enabled. Never add `using` directives for `System`, `System.IO`, `System.Linq`, `System.Collections.Generic`, `System.Threading` or `System.Threading.Tasks`.
 - The test project has a global using for `Xunit`. Never add `using Xunit;`.
 
-## 7. Environment
+## 7. Configuration (verified)
+
+- Settings arrive as environment variables named `Section__Key`, read as the configuration key `Section:Key`. There are no user-secrets. Sensitive or environment-specific values never go in `appsettings*.json`.
+- The keys the API needs to start are listed in `src/DanmaobErp.Api/Configuration/RequiredConfigurationKeys.cs` (property `All`). `RequiredConfiguration.EnsurePresent` stops the API at startup and names every missing variable, never its value. Add a key to that list only when a prompt says so.
+- CORS: `Cors__AllowedOrigins` holds the allowed origins separated by commas, validated by `CorsOriginsParser`. The policy is `DefaultCors`: explicit origins, methods and headers, no credentials.
+- The API exposes `GET /health`.
+- In .NET 10 the `Program` class is public for the test project. Never declare a `Program` class.
+- Tests that need configuration supply it with `UseSetting` on the web host builder, never with real environment variables.
+
+## 8. Environment
 
 - macOS, shell zsh. Use `curl`, never `curl.exe`.
-- Port 5000 is taken by AirPlay Receiver. Never configure the API on port 5000.
+- Port 5000 is taken by AirPlay Receiver. Never configure the API on port 5000. Locally the API listens on `https://localhost:7015` and `http://localhost:5116`.
 - SQL Server runs in Docker and is normally off. Never run a command that needs the database and never design a test that connects to it.
 - Build and test always from `Net/`: `dotnet build DanmaobErp.slnx` and `dotnet test DanmaobErp.slnx`.
