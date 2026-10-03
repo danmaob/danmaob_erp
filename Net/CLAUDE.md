@@ -58,8 +58,9 @@ Domain and Application never reference Entity Framework Core or ASP.NET Core pac
 
 ## 6. Code conventions (verified)
 
-- File-scoped namespace declarations.
+- File-scoped namespace declarations. A block-scoped namespace is a build error (IDE0161, enforced by `.editorconfig`).
 - Indentation with 4 spaces, never tabs.
+- Every type and member declares its accessibility modifier explicitly (`public`, `private`, `internal`, `protected`). A missing modifier is a build error (IDE0040, enforced by `.editorconfig`).
 - `Nullable` is enabled and every nullable warning is a compile error. Never suppress nullable warnings with `!` or `#pragma` unless a prompt explicitly says so.
 - `ImplicitUsings` is enabled. Never add `using` directives for `System`, `System.IO`, `System.Linq`, `System.Collections.Generic`, `System.Threading` or `System.Threading.Tasks`.
 - The test project has a global using for `Xunit`. Never add `using Xunit;`.
