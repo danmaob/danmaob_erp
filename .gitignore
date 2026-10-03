@@ -1,0 +1,9 @@
+# Solo se versionan Net/, React/ y MAUI/
+/*
+!/.gitignore
+!/Net/
+!/React/
+!/MAUI/
+
+# macOS
+.DS_Store
