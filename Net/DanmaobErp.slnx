@@ -6,6 +6,7 @@
     <Project Path="src/DanmaobErp.Infrastructure/DanmaobErp.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/DanmaobErp.Api.Tests/DanmaobErp.Api.Tests.csproj" />
     <Project Path="tests/DanmaobErp.ArchitectureTests/DanmaobErp.ArchitectureTests.csproj" />
   </Folder>
 </Solution>
