@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/DanmaobErp.Api/DanmaobErp.Api.csproj" />
+    <Project Path="src/DanmaobErp.Application/DanmaobErp.Application.csproj" />
+    <Project Path="src/DanmaobErp.Domain/DanmaobErp.Domain.csproj" />
+    <Project Path="src/DanmaobErp.Infrastructure/DanmaobErp.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/DanmaobErp.ArchitectureTests/DanmaobErp.ArchitectureTests.csproj" />
+  </Folder>
+</Solution>
