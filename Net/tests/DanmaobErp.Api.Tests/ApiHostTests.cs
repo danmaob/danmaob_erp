@@ -8,6 +8,7 @@ public sealed class ApiHostTests
 {
     private const string ConfiguredOrigin = "https://app.example.com";
     private const string UnconfiguredOrigin = "https://unknown.example.com";
+    private const string TestConnectionString = "Server=localhost;Database=DanmaobErpTests;TrustServerCertificate=True";
 
     private static async Task<HttpResponseMessage> SendPreflightAsync(string requestOrigin)
     {
@@ -15,6 +16,7 @@ public sealed class ApiHostTests
         var factory = baseFactory.WithWebHostBuilder(builder =>
         {
             builder.UseSetting("Cors:AllowedOrigins", ConfiguredOrigin);
+            builder.UseSetting("ConnectionStrings:Erp", TestConnectionString);
         });
 
         var client = factory.CreateClient();
@@ -50,6 +52,7 @@ public sealed class ApiHostTests
         var factory = baseFactory.WithWebHostBuilder(builder =>
         {
             builder.UseSetting("Cors:AllowedOrigins", ConfiguredOrigin);
+            builder.UseSetting("ConnectionStrings:Erp", TestConnectionString);
         });
 
         var client = factory.CreateClient();
