@@ -1,4 +1,6 @@
 using DanmaobErp.Api.Configuration;
+using DanmaobErp.Api.Tenancy;
+using DanmaobErp.Application.Tenancy;
 using DanmaobErp.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +24,8 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddHealthChecks();
 builder.Services.AddPersistence(builder.Configuration[RequiredConfigurationKeys.ErpConnectionString]);
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ITenantContext, HttpTenantContext>();
 
 var app = builder.Build();
 
