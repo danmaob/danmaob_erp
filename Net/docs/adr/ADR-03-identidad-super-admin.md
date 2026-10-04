@@ -1,6 +1,6 @@
 # ADR-03: Identidad del Super Admin
 
-**Estado:** Propuesto (pendiente de aprobación de Luis)
+**Estado:** Aceptado (2026-10-03)
 **Fecha:** 2026-10-02
 **Historia:** SP-01-1 (Épica E01 — Control Plane y Super Admin)
 **Requerimientos:** RF-001, RF-002, RF-003, RF-012, RF-015, RNF-007, RNF-010, RNF-028

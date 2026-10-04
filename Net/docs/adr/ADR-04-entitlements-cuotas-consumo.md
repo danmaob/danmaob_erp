@@ -1,6 +1,6 @@
 # ADR-04: Entitlements, cuotas y medición de consumo
 
-**Estado:** Propuesto (pendiente de aprobación de Luis)
+**Estado:** Aceptado (2026-10-03)
 **Fecha:** 2026-10-02
 **Historia:** SP-03-1 (Épica E03 — Planes, módulos y cuotas)
 **Requerimientos:** RF-007 a RF-011, RF-029 a RF-041, RF-121, RF-137, RF-142, RF-150, RNF-003, RNF-012, RNF-013, RNF-016, RNF-031

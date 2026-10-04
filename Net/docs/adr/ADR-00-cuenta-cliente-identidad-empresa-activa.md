@@ -1,6 +1,6 @@
 # ADR-00: Cuenta Cliente, identidad de usuarios y resolución de la empresa activa
 
-**Estado:** Propuesto (pendiente de aprobación de Luis)
+**Estado:** Aceptado (2026-10-03)
 **Fecha:** 2026-10-02
 **Historia:** SP-02-1 (Épica E02 — Registro, identidad y Cuenta Cliente)
 **Requerimientos:** RF-016, RF-019, RF-020, RF-023 a RF-028, RF-039, RF-047, RNF-002, RNF-005, RNF-029, RNF-040

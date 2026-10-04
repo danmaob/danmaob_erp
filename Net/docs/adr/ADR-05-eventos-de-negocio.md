@@ -1,6 +1,6 @@
 # ADR-05: Eventos de negocio para futuras automatizaciones
 
-**Estado:** Propuesto (pendiente de aprobación de Luis)
+**Estado:** Aceptado (2026-10-03)
 **Fecha:** 2026-10-02
 **Historia:** SP-00-2 (Épica E00 — Fundación técnica y arquitectura)
 **Requerimientos:** RNF-039, RF-033, RF-136

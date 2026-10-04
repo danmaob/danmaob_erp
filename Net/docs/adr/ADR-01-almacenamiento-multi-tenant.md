@@ -1,6 +1,6 @@
 # ADR-01: Estrategia de almacenamiento multi-tenant
 
-**Estado:** Propuesto (pendiente de aprobación de Luis)
+**Estado:** Aceptado (2026-10-03)
 **Fecha:** 2026-10-02
 **Historia:** SP-00-1 (Épica E00 — Fundación técnica y arquitectura)
 **Requerimientos:** RNF-001, RNF-017, RNF-018, RNF-019, RNF-022, RNF-023

@@ -1,6 +1,6 @@
 # ADR-02: Autenticación, sesiones y tokens compatibles con la futura app móvil
 
-**Estado:** Propuesto (pendiente de aprobación de Luis)
+**Estado:** Aceptado (2026-10-03)
 **Fecha:** 2026-10-02
 **Historia:** SP-02-2 (Épica E02 — Registro, identidad y Cuenta Cliente)
 **Requerimientos:** RF-017, RF-021, RF-022, RNF-004, RNF-005, RNF-007, RNF-010, RNF-040
