@@ -1,4 +1,5 @@
 using DanmaobErp.Api.Configuration;
+using DanmaobErp.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,7 @@ builder.Services.AddCors(options =>
     });
 });
 builder.Services.AddHealthChecks();
+builder.Services.AddPersistence(builder.Configuration[RequiredConfigurationKeys.ErpConnectionString]);
 
 var app = builder.Build();
 
