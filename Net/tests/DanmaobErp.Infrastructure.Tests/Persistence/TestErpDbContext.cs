@@ -1,3 +1,4 @@
+using DanmaobErp.Application.Tenancy;
 using DanmaobErp.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -5,7 +6,7 @@ namespace DanmaobErp.Infrastructure.Tests.Persistence;
 
 public sealed class TestErpDbContext : ErpDbContext
 {
-    public TestErpDbContext(DbContextOptions<ErpDbContext> options) : base(options)
+    public TestErpDbContext(DbContextOptions<ErpDbContext> options, ITenantContext tenantContext) : base(options, tenantContext)
     {
     }
 

@@ -15,7 +15,7 @@ public sealed class SoftDeleteQueryFilterTests
 
     private static async Task SeedAsync(DbContextOptions<ErpDbContext> options)
     {
-        await using var context = new TestErpDbContext(options);
+        await using var context = new TestErpDbContext(options, new FixedTenantContext(null));
         var active = new TestItem("Active");
         var inactive = new TestItem("Inactive");
         inactive.Deactivate();
@@ -29,7 +29,7 @@ public sealed class SoftDeleteQueryFilterTests
     {
         var options = CreateOptions(Guid.NewGuid().ToString());
         await SeedAsync(options);
-        await using var context = new TestErpDbContext(options);
+        await using var context = new TestErpDbContext(options, new FixedTenantContext(null));
         var items = await context.Set<TestItem>().ToListAsync();
         var item = Assert.Single(items);
         Assert.Equal("Active", item.Name);
@@ -40,7 +40,7 @@ public sealed class SoftDeleteQueryFilterTests
     {
         var options = CreateOptions(Guid.NewGuid().ToString());
         await SeedAsync(options);
-        await using var context = new TestErpDbContext(options);
+        await using var context = new TestErpDbContext(options, new FixedTenantContext(null));
         var items = await context.Set<TestItem>()
             .IgnoreQueryFilters(new[] { SoftDeleteQueryFilter.FilterName })
             .ToListAsync();
@@ -54,13 +54,13 @@ public sealed class SoftDeleteQueryFilterTests
     {
         var options = CreateOptions(Guid.NewGuid().ToString());
         await SeedAsync(options);
-        await using var updateContext = new TestErpDbContext(options);
+        await using var updateContext = new TestErpDbContext(options, new FixedTenantContext(null));
         var item = await updateContext.Set<TestItem>()
             .IgnoreQueryFilters(new[] { SoftDeleteQueryFilter.FilterName })
             .SingleAsync(i => i.Name == "Inactive");
         item.Reactivate();
         await updateContext.SaveChangesAsync();
-        await using var queryContext = new TestErpDbContext(options);
+        await using var queryContext = new TestErpDbContext(options, new FixedTenantContext(null));
         var items = await queryContext.Set<TestItem>().ToListAsync();
         Assert.Equal(2, items.Count);
     }

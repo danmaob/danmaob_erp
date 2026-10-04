@@ -22,7 +22,7 @@ public sealed class EntityKeyConfigurationTests
     {
         var builder = new DbContextOptionsBuilder<ErpDbContext>();
         builder.UseInMemoryDatabase(Guid.NewGuid().ToString());
-        using var context = new TestErpDbContext(builder.Options);
+        using var context = new TestErpDbContext(builder.Options, new FixedTenantContext(null));
         var model = context.GetService<IDesignTimeModel>().Model;
         var entityType = model.FindEntityType(typeof(TestItem));
 

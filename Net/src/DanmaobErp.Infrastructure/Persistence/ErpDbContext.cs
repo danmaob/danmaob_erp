@@ -1,3 +1,4 @@
+using DanmaobErp.Application.Tenancy;
 using DanmaobErp.Infrastructure.Persistence.ModelConfiguration;
 using Microsoft.EntityFrameworkCore;
 
@@ -5,8 +6,19 @@ namespace DanmaobErp.Infrastructure.Persistence;
 
 public class ErpDbContext : DbContext
 {
-    public ErpDbContext(DbContextOptions<ErpDbContext> options) : base(options)
+    private readonly ITenantContext _tenantContext;
+
+    public ErpDbContext(DbContextOptions<ErpDbContext> options, ITenantContext tenantContext) : base(options)
     {
+        _tenantContext = tenantContext;
+    }
+
+    public Guid CurrentTenantId
+    {
+        get
+        {
+            return _tenantContext.RequireTenantId();
+        }
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
