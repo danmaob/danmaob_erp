@@ -27,6 +27,7 @@ This file contains only permanent rules and verified facts. The work for each ta
 - .NET 10 (`net10.0`), `LangVersion latest`. SDK pinned in `global.json` (10.0.400, roll forward to the latest feature band). Never use APIs or patterns from earlier .NET, ASP.NET Core or EF Core versions.
 - ASP.NET Core Web API with controllers.
 - xUnit for tests, NetArchTest.Rules for architecture tests.
+- EF Core 10 (packages 10.0.12) with SQL Server. Persistence tests use the EF Core in-memory provider; no test connects to SQL Server.
 - No MediatR, no CQRS, no mediator library of any kind.
 
 ## 4. Repository layout (verified)
@@ -42,6 +43,7 @@ This file contains only permanent rules and verified facts. The work for each ta
 | `src/DanmaobErp.Api/` | ASP.NET Core Web API (controllers) |
 | `tests/DanmaobErp.ArchitectureTests/` | Architecture tests |
 | `tests/DanmaobErp.Api.Tests/` | API tests: unit tests of API classes and integration tests that host the API in memory with `WebApplicationFactory<Program>` |
+| `tests/DanmaobErp.Infrastructure.Tests/` | Infrastructure tests: persistence model and query filters, with the EF Core in-memory provider |
 | `docs/adr/` | Architecture Decision Records (read only when a prompt names one) |
 
 The folder name, project name and root namespace of every project are identical. A namespace always follows the folder path below its project folder.
@@ -70,6 +72,7 @@ Domain and Application never reference Entity Framework Core or ASP.NET Core pac
 
 - Settings arrive as environment variables named `Section__Key`, read as the configuration key `Section:Key`. There are no user-secrets. Sensitive or environment-specific values never go in `appsettings*.json`.
 - The keys the API needs to start are listed in `src/DanmaobErp.Api/Configuration/RequiredConfigurationKeys.cs` (property `All`). `RequiredConfiguration.EnsurePresent` stops the API at startup and names every missing variable, never its value. Add a key to that list only when a prompt says so.
+- Database: `ConnectionStrings__Erp` (key `ConnectionStrings:Erp`, constant `RequiredConfigurationKeys.ErpConnectionString`) holds the SQL Server connection string. It is required at startup and is used only in `AddPersistence`. Tests supply it with `UseSetting`; its value is never used to connect.
 - CORS: `Cors__AllowedOrigins` holds the allowed origins separated by commas, validated by `CorsOriginsParser`. The policy is `DefaultCors`: explicit origins, methods and headers, no credentials.
 - The API exposes `GET /health`.
 - In .NET 10 the `Program` class is public for the test project. Never declare a `Program` class.
@@ -81,3 +84,15 @@ Domain and Application never reference Entity Framework Core or ASP.NET Core pac
 - Port 5000 is taken by AirPlay Receiver. Never configure the API on port 5000. Locally the API listens on `https://localhost:7015` and `http://localhost:5116`.
 - SQL Server runs in Docker and is normally off. Never run a command that needs the database and never design a test that connects to it.
 - Build and test always from `Net/`: `dotnet build DanmaobErp.slnx` and `dotnet test DanmaobErp.slnx`.
+
+## 9. Persistence (verified)
+
+- There is one `DbContext`: `ErpDbContext`, in `src/DanmaobErp.Infrastructure/Persistence/ErpDbContext.cs`. Never modify it unless a prompt says so. It is not sealed: tests derive `TestErpDbContext` from it.
+- SQL Server schemas: `DatabaseSchemas.Platform` (`platform`, platform catalog) and `DatabaseSchemas.Erp` (`erp`, operational data of each company), in `src/DanmaobErp.Infrastructure/Persistence/DatabaseSchemas.cs`.
+- Every entity derives from `DanmaobErp.Domain.Common.Entity`: `Guid Id` with `private set`, assigned in the constructor with `Guid.CreateVersion7()`. Never generate an `Id` anywhere else.
+- Entities with logical deletes derive from `DanmaobErp.Domain.Common.SoftDeletableEntity`: `IsActive`, `Deactivate()` and `Reactivate()`. There are no physical deletes.
+- `OnModelCreating` applies the configurations of each entity first and the model-wide configurations last: `EntityKeyConfiguration` (non-clustered primary key on `Id` and a shadow `ClusterKey` identity column with a unique clustered index) and `SoftDeleteQueryFilter` (named query filter `SoftDelete`). Never map `ClusterKey` and never call `HasKey` in an entity configuration.
+- Query filters are named. To include deactivated entities, ignore only the `SoftDelete` filter by name. Never call `IgnoreQueryFilters()` without filter names.
+- Every property of an entity is mapped explicitly in its configuration. For a relationship with only a foreign key and no navigation property, use `HasOne<TRelated>()` without arguments.
+- The connection string is registered only in `AddPersistence` (`src/DanmaobErp.Infrastructure/Persistence/PersistenceServiceCollectionExtensions.cs`).
+- Migrations live in `src/DanmaobErp.Infrastructure/Persistence/Migrations/` and are created only with the exact `dotnet ef migrations add` command a prompt gives. They are generated code for `.editorconfig`: never edit them by hand. Never run `dotnet ef database update`.
