@@ -1,0 +1,6 @@
+namespace DanmaobErp.Domain.Common;
+
+public interface ITenantOwned
+{
+    public Guid TenantId { get; }
+}
