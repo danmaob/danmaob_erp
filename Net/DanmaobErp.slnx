@@ -8,5 +8,6 @@
   <Folder Name="/tests/">
     <Project Path="tests/DanmaobErp.Api.Tests/DanmaobErp.Api.Tests.csproj" />
     <Project Path="tests/DanmaobErp.ArchitectureTests/DanmaobErp.ArchitectureTests.csproj" />
+    <Project Path="tests/DanmaobErp.Infrastructure.Tests/DanmaobErp.Infrastructure.Tests.csproj" />
   </Folder>
 </Solution>
