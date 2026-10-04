@@ -22,7 +22,7 @@ public sealed class RequiredConfigurationTests
             () => RequiredConfiguration.EnsurePresent(configuration, RequiredConfigurationKeys.All)
         );
 
-        Assert.Equal("Missing required configuration. Set these environment variables: Cors__AllowedOrigins", exception.Message);
+        Assert.Equal("Missing required configuration. Set these environment variables: Cors__AllowedOrigins, ConnectionStrings__Erp", exception.Message);
     }
 
     [Fact]
@@ -59,7 +59,8 @@ public sealed class RequiredConfigurationTests
     {
         var configuration = BuildConfiguration(new Dictionary<string, string?>
         {
-            ["Cors:AllowedOrigins"] = "https://app.example.com"
+            ["Cors:AllowedOrigins"] = "https://app.example.com",
+            ["ConnectionStrings:Erp"] = "Server=localhost;Database=DanmaobErpTests;TrustServerCertificate=True"
         });
 
         Assert.Null(Record.Exception(() => RequiredConfiguration.EnsurePresent(configuration, RequiredConfigurationKeys.All)));
