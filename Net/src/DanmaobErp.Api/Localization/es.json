@@ -1,0 +1,11 @@
+{
+  "Errors.ValidationFailed": "Los datos enviados no son válidos.",
+  "Errors.TenantNotResolved": "No se identificó la empresa de tu sesión. Inicia sesión de nuevo.",
+  "Errors.CrossTenantWrite": "No tienes acceso a este registro.",
+  "Errors.NotFound": "El recurso solicitado no existe.",
+  "Errors.MethodNotAllowed": "La operación no está permitida para este recurso.",
+  "Errors.InternalError": "Ocurrió un error inesperado. Si continúa, comunícate con soporte e indica el folio del error.",
+  "Validation.Required": "Este campo es obligatorio.",
+  "Validation.MaxLength": "Este campo debe tener como máximo {1} caracteres.",
+  "Validation.InvalidValue": "El valor de este campo no es válido."
+}
