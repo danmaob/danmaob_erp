@@ -87,7 +87,7 @@ Domain and Application never reference Entity Framework Core or ASP.NET Core pac
 
 ## 9. Persistence (verified)
 
-- There is one `DbContext`: `ErpDbContext`, in `src/DanmaobErp.Infrastructure/Persistence/ErpDbContext.cs`. Never modify it unless a prompt says so. It is not sealed: tests derive `TestErpDbContext` from it.
+- There is one `DbContext`: `ErpDbContext`, in `src/DanmaobErp.Infrastructure/Persistence/ErpDbContext.cs`. Never modify it unless a prompt says so. It is not sealed: tests derive `TestErpDbContext` from it. Its constructor takes `DbContextOptions<ErpDbContext>` and `ITenantContext`.
 - SQL Server schemas: `DatabaseSchemas.Platform` (`platform`, platform catalog) and `DatabaseSchemas.Erp` (`erp`, operational data of each company), in `src/DanmaobErp.Infrastructure/Persistence/DatabaseSchemas.cs`.
 - Every entity derives from `DanmaobErp.Domain.Common.Entity`: `Guid Id` with `private set`, assigned in the constructor with `Guid.CreateVersion7()`. Never generate an `Id` anywhere else.
 - Entities with logical deletes derive from `DanmaobErp.Domain.Common.SoftDeletableEntity`: `IsActive`, `Deactivate()` and `Reactivate()`. There are no physical deletes.
@@ -96,3 +96,12 @@ Domain and Application never reference Entity Framework Core or ASP.NET Core pac
 - Every property of an entity is mapped explicitly in its configuration. For a relationship with only a foreign key and no navigation property, use `HasOne<TRelated>()` without arguments.
 - The connection string is registered only in `AddPersistence` (`src/DanmaobErp.Infrastructure/Persistence/PersistenceServiceCollectionExtensions.cs`).
 - Migrations live in `src/DanmaobErp.Infrastructure/Persistence/Migrations/` and are created only with the exact `dotnet ef migrations add` command a prompt gives. They are generated code for `.editorconfig`: never edit them by hand. Never run `dotnet ef database update`.
+
+## 10. Tenant isolation (verified)
+
+- Operational entities (the data of one company) implement `DanmaobErp.Domain.Common.ITenantOwned`: a `Guid TenantId` property with `private set`. The entity never assigns `TenantId`: `TenantWriteGuard` assigns it when the entity is saved for the first time.
+- Platform catalog entities (accounts, companies, users, Control Plane) do not implement `ITenantOwned` and must be listed in `PlatformCatalog.EntityTypes` (`src/DanmaobErp.Infrastructure/Persistence/PlatformCatalog.cs`). A test fails if an entity of the model is neither tenant-owned nor in that list.
+- `DanmaobErp.Application.Tenancy.ITenantContext.RequireTenantId()` is the only source of the current tenant. It returns the tenant or throws `TenantNotResolvedException`. In the API, `HttpTenantContext` (scoped) reads the claim `tenant_id` (`TenantClaimTypes.TenantId`). Never add a default tenant, a tenant header, a query string value or any fallback.
+- The named query filter `Tenant` (`TenantQueryFilter`) is the last statement of `OnModelCreating`. Ignoring `SoftDelete` by name keeps it. Never ignore the `Tenant` filter in operational code.
+- `ErpDbContext` overrides `SaveChanges(bool)` and `SaveChangesAsync(bool, CancellationToken)`; both call `TenantWriteGuard.Apply` before saving. Never remove these overrides and never replace them with an interceptor. A write of a tenant-owned entity of another tenant throws `CrossTenantWriteException`.
+- Infrastructure tests build contexts with `FixedTenantContext` (a fixed tenant, or `null` for a request without tenant), never with the API classes.
