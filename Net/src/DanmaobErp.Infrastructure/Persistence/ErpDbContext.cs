@@ -26,5 +26,18 @@ public class ErpDbContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ErpDbContext).Assembly);
         EntityKeyConfiguration.Apply(modelBuilder);
         SoftDeleteQueryFilter.Apply(modelBuilder);
+        TenantQueryFilter.Apply(modelBuilder, this);
+    }
+
+    public override int SaveChanges(bool acceptAllChangesOnSuccess)
+    {
+        TenantWriteGuard.Apply(ChangeTracker, _tenantContext);
+        return base.SaveChanges(acceptAllChangesOnSuccess);
+    }
+
+    public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+    {
+        TenantWriteGuard.Apply(ChangeTracker, _tenantContext);
+        return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
     }
 }
