@@ -19,6 +19,14 @@ public sealed class TestErpDbContext : ErpDbContext
             entity.Property(e => e.IsActive);
             entity.Property(e => e.Name).HasMaxLength(100);
         });
+        modelBuilder.Entity<TestTenantItem>(entity =>
+        {
+            entity.ToTable("TestTenantItems", DatabaseSchemas.Erp);
+            entity.Property(e => e.Id);
+            entity.Property(e => e.IsActive);
+            entity.Property(e => e.TenantId);
+            entity.Property(e => e.Name).HasMaxLength(100);
+        });
         base.OnModelCreating(modelBuilder);
     }
 }
