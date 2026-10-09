@@ -72,4 +72,22 @@ public sealed class ApiHostTests
         Assert.NotNull(exception);
         Assert.Contains("Cors__AllowedOrigins", exception.ToString());
     }
+
+    [Fact]
+    public void Startup_Fails_WhenMessageDictionaryIsMissing()
+    {
+        using var baseFactory = new WebApplicationFactory<Program>();
+
+        var factory = baseFactory.WithWebHostBuilder(builder =>
+        {
+            builder.UseSetting("Cors:AllowedOrigins", ConfiguredOrigin);
+            builder.UseSetting("ConnectionStrings:Erp", TestConnectionString);
+            builder.UseSetting("Localization:Path", Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()));
+        });
+
+        var exception = Record.Exception(() => factory.CreateClient());
+
+        Assert.NotNull(exception);
+        Assert.Contains("message dictionary directory", exception.ToString());
+    }
 }
