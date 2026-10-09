@@ -28,6 +28,7 @@ This file contains only permanent rules and verified facts. The work for each ta
 - ASP.NET Core Web API with controllers.
 - xUnit for tests, NetArchTest.Rules for architecture tests.
 - EF Core 10 (packages 10.0.12) with SQL Server. Persistence tests use the EF Core in-memory provider; no test connects to SQL Server.
+- `DanmaobErp.Infrastructure` references the ASP.NET Core shared framework (`FrameworkReference` `Microsoft.AspNetCore.App`, without version) for localization, file providers and logging. Never add a version or a NuGet package for those namespaces.
 - No MediatR, no CQRS, no mediator library of any kind.
 
 ## 4. Repository layout (verified)
@@ -105,3 +106,12 @@ Domain and Application never reference Entity Framework Core or ASP.NET Core pac
 - The named query filter `Tenant` (`TenantQueryFilter`) is the last statement of `OnModelCreating`. Ignoring `SoftDelete` by name keeps it. Never ignore the `Tenant` filter in operational code.
 - `ErpDbContext` overrides `SaveChanges(bool)` and `SaveChangesAsync(bool, CancellationToken)`; both call `TenantWriteGuard.Apply` before saving. Never remove these overrides and never replace them with an interceptor. A write of a tenant-owned entity of another tenant throws `CrossTenantWriteException`.
 - Infrastructure tests build contexts with `FixedTenantContext` (a fixed tenant, or `null` for a request without tenant), never with the API classes.
+
+## 11. Errors and messages (verified)
+
+- Every error response is `ProblemDetails` (`application/problem+json`) with `status`, `code` (`ApiErrorCodes`, stable, English), `title` (translated) and `traceId`; validation errors add `errors`. `ApiExceptionHandler` (`src/DanmaobErp.Api/Errors/`) builds them: never build an error response by hand in a controller.
+- To reject input for a business rule, throw `DanmaobErp.Application.Errors.ValidationFailedException` with field names and message keys (422). `TenantNotResolvedException` maps to 401 and `CrossTenantWriteException` to 403. Anything else is a 500 that never exposes the exception message, type or stack trace.
+- Never write user-facing text in code. Every message has a key in `DanmaobErp.Application.Localization.MessageKeys` and a text in the dictionary `src/DanmaobErp.Api/Localization/es.json`. Prompts never edit `es.json`: the user does. A test fails if a key of `MessageKeys` is missing in the dictionary.
+- Input models declare every required field with `[Required(ErrorMessage = MessageKeys.Validation.Required)]`, and every other validation attribute with a key of `MessageKeys.Validation`. Messages never include the field name. The implicit required rule of non-nullable properties is disabled.
+- `IStringLocalizer` (from `Microsoft.Extensions.Localization`) is the only way to get a message. The language of a request (header `Accept-Language`) changes only the messages: number and date formats of the API stay invariant.
+- Logs are always in English, use message templates (never string interpolation) and never contain request bodies, passwords or fiscal data.
