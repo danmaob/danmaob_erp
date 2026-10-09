@@ -38,6 +38,11 @@ builder.Services.AddExceptionHandler<ApiExceptionHandler>();
 
 var app = builder.Build();
 
+app.Services.GetRequiredService<MessageCatalog>();
+app.UseRequestLocalization(RequestLocalizationSetup.Create(app.Services.GetRequiredService<LocalizationSettings>()));
+app.UseExceptionHandler();
+app.UseStatusCodePages();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
