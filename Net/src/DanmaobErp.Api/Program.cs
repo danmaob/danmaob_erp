@@ -3,8 +3,10 @@ using DanmaobErp.Api.Documentation;
 using DanmaobErp.Api.Errors;
 using DanmaobErp.Api.Tenancy;
 using DanmaobErp.Application.Tenancy;
+using DanmaobErp.Application.Time;
 using DanmaobErp.Infrastructure.Localization;
 using DanmaobErp.Infrastructure.Persistence;
+using DanmaobErp.Infrastructure.Time;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -30,6 +32,7 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddHealthChecks();
 builder.Services.AddPersistence(builder.Configuration[RequiredConfigurationKeys.ErpConnectionString]);
+builder.Services.AddBusinessClock();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ITenantContext, HttpTenantContext>();
 builder.Services.Configure<ApiBehaviorOptions>(options => options.InvalidModelStateResponseFactory = InvalidModelStateResponse.Create);
@@ -41,6 +44,7 @@ builder.Services.AddExceptionHandler<ApiExceptionHandler>();
 var app = builder.Build();
 
 app.Services.GetRequiredService<MessageCatalog>();
+app.Services.GetRequiredService<IBusinessClock>();
 app.UseRequestLocalization(RequestLocalizationSetup.Create(app.Services.GetRequiredService<LocalizationSettings>()));
 app.UseExceptionHandler();
 app.UseStatusCodePages();
