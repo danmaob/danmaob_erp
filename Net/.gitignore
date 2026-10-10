@@ -480,3 +480,6 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Archivos locales de la API: correos de prueba y almacenamiento (TS-00-8)
+**/App_Data/
