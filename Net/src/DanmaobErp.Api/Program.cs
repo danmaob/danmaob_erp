@@ -1,4 +1,5 @@
 using DanmaobErp.Api.Configuration;
+using DanmaobErp.Api.Documentation;
 using DanmaobErp.Api.Errors;
 using DanmaobErp.Api.Tenancy;
 using DanmaobErp.Application.Tenancy;
@@ -17,7 +18,7 @@ var allowedOrigins = CorsOriginsParser.Parse(builder.Configuration[RequiredConfi
 builder.Services.AddMessageLocalization(builder.Configuration, builder.Environment.ContentRootPath);
 builder.Services.AddControllers().AddDataAnnotationsLocalization().AddJsonOptions(options => options.AllowInputFormatterExceptionMessages = false);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options => options.AddDocumentTransformer<ApiDocumentInfoTransformer>());
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("DefaultCors", policy =>
@@ -33,6 +34,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ITenantContext, HttpTenantContext>();
 builder.Services.Configure<ApiBehaviorOptions>(options => options.InvalidModelStateResponseFactory = InvalidModelStateResponse.Create);
 builder.Services.AddSingleton<IConfigureOptions<MvcOptions>, ModelBindingMessagesSetup>();
+builder.Services.AddSingleton<IConfigureOptions<MvcOptions>, ProblemDetailsResponseTypesSetup>();
 builder.Services.AddProblemDetails(options => options.CustomizeProblemDetails = ProblemDetailsCustomization.Apply);
 builder.Services.AddExceptionHandler<ApiExceptionHandler>();
 
