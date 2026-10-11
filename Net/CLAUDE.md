@@ -131,3 +131,11 @@ Domain and Application never reference Entity Framework Core or ASP.NET Core pac
 - `IBusinessClock.UtcNow` is the instant to store in the database (always UTC). `Now` and `Today` are the date and time of Central Mexico (`America/Mexico_City`, UTC-6, no daylight saving time), used only for business dates: monthly quota cuts, document dates, due dates.
 - `BusinessClock` (`src/DanmaobErp.Infrastructure/Time/`) is a singleton created at startup; the API refuses to start if the server has no data for the time zone. Never add a fallback zone, a fixed offset or `TimeZoneInfo.Local`.
 - Tests control time with `FixedTimeProvider` (`tests/DanmaobErp.Infrastructure.Tests/Time/`), never with the real clock.
+
+## 14. External services (verified)
+
+- Business code uses only the interfaces of Application: `IEmailSender` (`Email`), `IFileStorage` (`Storage`) and `IHumanVerifier` (`Security`). Never reference `System.Net.Mail`, file paths or a cloud SDK outside their implementations in `src/DanmaobErp.Infrastructure/`.
+- Local implementations: `FolderEmailSender` writes one `.eml` file per message into `Email:OutboxPath` (default `App_Data/mail-outbox`) and never connects to a server; `LocalFileStorage` stores files under `FileStorage:RootPath` (default `App_Data/files`). `App_Data/` is ignored by Git.
+- File keys are relative paths with segments of letters, digits, `.`, `-` and `_` separated by `/` (for example `tenants/{tenantId}/logos/logo.png`). `LocalFileStorage` rejects any other key. The caller builds the key with the tenant; the storage knows nothing about tenants.
+- `DevelopmentHumanVerifier` (accepts any non-empty token) is registered only in Development; every other environment uses `RejectingHumanVerifier`, which rejects everything. Never register a verifier that accepts every request outside Development.
+- A real provider is added as a new implementation of the same interface, with its credentials only in environment variables.
