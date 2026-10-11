@@ -33,6 +33,7 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddHealthChecks();
 builder.Services.AddPersistence(builder.Configuration[RequiredConfigurationKeys.ErpConnectionString]);
+builder.Services.AddUnitOfWork();
 builder.Services.AddBusinessClock();
 builder.Services.AddExternalServices(builder.Configuration, builder.Environment.ContentRootPath, builder.Environment.IsDevelopment());
 builder.Services.AddHttpContextAccessor();
