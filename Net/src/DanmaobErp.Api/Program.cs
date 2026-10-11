@@ -4,6 +4,7 @@ using DanmaobErp.Api.Errors;
 using DanmaobErp.Api.Tenancy;
 using DanmaobErp.Application.Tenancy;
 using DanmaobErp.Application.Time;
+using DanmaobErp.Infrastructure.ExternalServices;
 using DanmaobErp.Infrastructure.Localization;
 using DanmaobErp.Infrastructure.Persistence;
 using DanmaobErp.Infrastructure.Time;
@@ -33,6 +34,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddHealthChecks();
 builder.Services.AddPersistence(builder.Configuration[RequiredConfigurationKeys.ErpConnectionString]);
 builder.Services.AddBusinessClock();
+builder.Services.AddExternalServices(builder.Configuration, builder.Environment.ContentRootPath, builder.Environment.IsDevelopment());
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ITenantContext, HttpTenantContext>();
 builder.Services.Configure<ApiBehaviorOptions>(options => options.InvalidModelStateResponseFactory = InvalidModelStateResponse.Create);
