@@ -1,7 +1,9 @@
 using DanmaobErp.Api.Configuration;
 using DanmaobErp.Api.Documentation;
 using DanmaobErp.Api.Errors;
+using DanmaobErp.Api.Identity;
 using DanmaobErp.Api.Tenancy;
+using DanmaobErp.Application.Identity;
 using DanmaobErp.Application.Tenancy;
 using DanmaobErp.Application.Time;
 using DanmaobErp.Infrastructure.ExternalServices;
@@ -38,6 +40,7 @@ builder.Services.AddBusinessClock();
 builder.Services.AddExternalServices(builder.Configuration, builder.Environment.ContentRootPath, builder.Environment.IsDevelopment());
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ITenantContext, HttpTenantContext>();
+builder.Services.AddScoped<ICurrentActor, HttpCurrentActor>();
 builder.Services.Configure<ApiBehaviorOptions>(options => options.InvalidModelStateResponseFactory = InvalidModelStateResponse.Create);
 builder.Services.AddSingleton<IConfigureOptions<MvcOptions>, ModelBindingMessagesSetup>();
 builder.Services.AddSingleton<IConfigureOptions<MvcOptions>, ProblemDetailsResponseTypesSetup>();
