@@ -1,3 +1,4 @@
+using DanmaobErp.Domain.Auditing;
 using DanmaobErp.Domain.Common;
 using DanmaobErp.Infrastructure.Persistence;
 using DanmaobErp.Infrastructure.Persistence.ModelConfiguration;
@@ -34,7 +35,7 @@ public sealed class TenantModelTests
     [Fact]
     public void EveryEntityOfTheRealModel_IsTenantOwnedOrPlatformCatalog()
     {
-        using var context = new ErpDbContext(CreateOptions(Guid.NewGuid().ToString()), new FixedTenantContext(null));
+        using var context = new ErpDbContext(CreateOptions(Guid.NewGuid().ToString()), new FixedTenantContext(null), new FixedCurrentActor(ActorType.Anonymous, null), new FixedBusinessClock(new DateTimeOffset(2026, 10, 11, 18, 30, 0, TimeSpan.Zero)));
         var model = context.GetService<IDesignTimeModel>().Model;
         var offenders = model.GetEntityTypes()
             .Where(t => !t.IsOwned() && typeof(ITenantOwned).IsAssignableFrom(t.ClrType) is false && PlatformCatalog.EntityTypes.Contains(t.ClrType) is false)

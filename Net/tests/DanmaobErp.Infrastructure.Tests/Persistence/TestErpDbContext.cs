@@ -1,4 +1,7 @@
+using DanmaobErp.Application.Identity;
 using DanmaobErp.Application.Tenancy;
+using DanmaobErp.Application.Time;
+using DanmaobErp.Domain.Auditing;
 using DanmaobErp.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,7 +9,11 @@ namespace DanmaobErp.Infrastructure.Tests.Persistence;
 
 public sealed class TestErpDbContext : ErpDbContext
 {
-    public TestErpDbContext(DbContextOptions<ErpDbContext> options, ITenantContext tenantContext) : base(options, tenantContext)
+    public TestErpDbContext(DbContextOptions<ErpDbContext> options, ITenantContext tenantContext) : base(options, tenantContext, new FixedCurrentActor(ActorType.Anonymous, null), new FixedBusinessClock(new DateTimeOffset(2026, 10, 11, 18, 30, 0, TimeSpan.Zero)))
+    {
+    }
+
+    public TestErpDbContext(DbContextOptions<ErpDbContext> options, ITenantContext tenantContext, ICurrentActor currentActor, IBusinessClock businessClock) : base(options, tenantContext, currentActor, businessClock)
     {
     }
 
