@@ -141,6 +141,590 @@ namespace DanmaobErp.Infrastructure.Persistence.Migrations
 
                     b.ToTable("TenantAuditEntries", "erp");
                 });
+
+            modelBuilder.Entity("DanmaobErp.Domain.Plans.Plan", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<long>("ClusterKey")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ClusterKey"));
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDefaultForRegistration")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
+
+                    b.HasIndex("ClusterKey")
+                        .IsUnique();
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("ClusterKey"));
+
+                    b.HasIndex("IsDefaultForRegistration")
+                        .IsUnique()
+                        .HasFilter("[IsDefaultForRegistration] = 1");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Plans", "platform");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000100000000"),
+                            IsActive = true,
+                            IsDefaultForRegistration = true,
+                            Name = "Free"
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000200000000"),
+                            IsActive = true,
+                            IsDefaultForRegistration = false,
+                            Name = "Básico"
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000300000000"),
+                            IsActive = false,
+                            IsDefaultForRegistration = false,
+                            Name = "Premium"
+                        });
+                });
+
+            modelBuilder.Entity("DanmaobErp.Domain.Plans.PlanModule", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<long>("ClusterKey")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ClusterKey"));
+
+                    b.Property<string>("Module")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<Guid>("PlanId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
+
+                    b.HasIndex("ClusterKey")
+                        .IsUnique();
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("ClusterKey"));
+
+                    b.HasIndex("PlanId", "Module")
+                        .IsUnique();
+
+                    b.ToTable("PlanModules", "platform");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000101000001"),
+                            Module = "Customers",
+                            PlanId = new Guid("019a0000-0000-7000-8000-000100000000")
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000101000002"),
+                            Module = "Inventory",
+                            PlanId = new Guid("019a0000-0000-7000-8000-000100000000")
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000101000003"),
+                            Module = "Sales",
+                            PlanId = new Guid("019a0000-0000-7000-8000-000100000000")
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000201000001"),
+                            Module = "Customers",
+                            PlanId = new Guid("019a0000-0000-7000-8000-000200000000")
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000201000002"),
+                            Module = "Inventory",
+                            PlanId = new Guid("019a0000-0000-7000-8000-000200000000")
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000201000003"),
+                            Module = "Sales",
+                            PlanId = new Guid("019a0000-0000-7000-8000-000200000000")
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000201000004"),
+                            Module = "Purchasing",
+                            PlanId = new Guid("019a0000-0000-7000-8000-000200000000")
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000201000005"),
+                            Module = "Invoicing",
+                            PlanId = new Guid("019a0000-0000-7000-8000-000200000000")
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000201000006"),
+                            Module = "Finance",
+                            PlanId = new Guid("019a0000-0000-7000-8000-000200000000")
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000201000007"),
+                            Module = "Reports",
+                            PlanId = new Guid("019a0000-0000-7000-8000-000200000000")
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000201000008"),
+                            Module = "BusinessEmail",
+                            PlanId = new Guid("019a0000-0000-7000-8000-000200000000")
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000301000001"),
+                            Module = "Customers",
+                            PlanId = new Guid("019a0000-0000-7000-8000-000300000000")
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000301000002"),
+                            Module = "Inventory",
+                            PlanId = new Guid("019a0000-0000-7000-8000-000300000000")
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000301000003"),
+                            Module = "Sales",
+                            PlanId = new Guid("019a0000-0000-7000-8000-000300000000")
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000301000004"),
+                            Module = "Purchasing",
+                            PlanId = new Guid("019a0000-0000-7000-8000-000300000000")
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000301000005"),
+                            Module = "Invoicing",
+                            PlanId = new Guid("019a0000-0000-7000-8000-000300000000")
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000301000006"),
+                            Module = "Finance",
+                            PlanId = new Guid("019a0000-0000-7000-8000-000300000000")
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000301000007"),
+                            Module = "Reports",
+                            PlanId = new Guid("019a0000-0000-7000-8000-000300000000")
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000301000008"),
+                            Module = "BusinessEmail",
+                            PlanId = new Guid("019a0000-0000-7000-8000-000300000000")
+                        });
+                });
+
+            modelBuilder.Entity("DanmaobErp.Domain.Plans.PlanQuota", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<long>("ClusterKey")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ClusterKey"));
+
+                    b.Property<long?>("Limit")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("PlanId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Quota")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
+
+                    b.Property<bool>("ReturnsOnCancel")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
+
+                    b.HasIndex("ClusterKey")
+                        .IsUnique();
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("ClusterKey"));
+
+                    b.HasIndex("PlanId", "Quota")
+                        .IsUnique();
+
+                    b.ToTable("PlanQuotas", "platform");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000102000001"),
+                            Limit = 1L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000100000000"),
+                            Quota = "Tenants",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000102000002"),
+                            Limit = 2L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000100000000"),
+                            Quota = "ActiveUsers",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000102000003"),
+                            Limit = 1L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000100000000"),
+                            Quota = "Branches",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000102000004"),
+                            Limit = 1L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000100000000"),
+                            Quota = "Warehouses",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000102000005"),
+                            Limit = 300L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000100000000"),
+                            Quota = "Products",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000102000006"),
+                            Limit = 200L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000100000000"),
+                            Quota = "Customers",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000102000007"),
+                            Limit = 100L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000100000000"),
+                            Quota = "Prospects",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000102000008"),
+                            Limit = 100L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000100000000"),
+                            Quota = "SalesDocuments",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000102000009"),
+                            Limit = 524288000L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000100000000"),
+                            Quota = "FileStorageBytes",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000102000010"),
+                            Limit = 0L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000100000000"),
+                            Quota = "InvoiceStamps",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000102000011"),
+                            Limit = 0L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000100000000"),
+                            Quota = "BusinessEmails",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000102000012"),
+                            Limit = 0L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000100000000"),
+                            Quota = "TaxDocumentStorageBytes",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000102000013"),
+                            Limit = 90L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000100000000"),
+                            Quota = "AuditQueryWindowDays",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000202000001"),
+                            Limit = 1L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000200000000"),
+                            Quota = "Tenants",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000202000002"),
+                            Limit = 5L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000200000000"),
+                            Quota = "ActiveUsers",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000202000003"),
+                            Limit = 2L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000200000000"),
+                            Quota = "Branches",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000202000004"),
+                            Limit = 3L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000200000000"),
+                            Quota = "Warehouses",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000202000005"),
+                            Limit = 5000L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000200000000"),
+                            Quota = "Products",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000202000006"),
+                            Limit = 5000L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000200000000"),
+                            Quota = "Customers",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000202000007"),
+                            Limit = 1000L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000200000000"),
+                            Quota = "Prospects",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000202000008"),
+                            Limit = 2000L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000200000000"),
+                            Quota = "SalesDocuments",
+                            ReturnsOnCancel = true
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000202000009"),
+                            Limit = 5368709120L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000200000000"),
+                            Quota = "FileStorageBytes",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000202000010"),
+                            Limit = 100L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000200000000"),
+                            Quota = "InvoiceStamps",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000202000011"),
+                            Limit = 1000L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000200000000"),
+                            Quota = "BusinessEmails",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000202000012"),
+                            Limit = 2147483648L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000200000000"),
+                            Quota = "TaxDocumentStorageBytes",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000202000013"),
+                            Limit = 365L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000200000000"),
+                            Quota = "AuditQueryWindowDays",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000302000001"),
+                            Limit = 3L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000300000000"),
+                            Quota = "Tenants",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000302000002"),
+                            Limit = 15L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000300000000"),
+                            Quota = "ActiveUsers",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000302000003"),
+                            Limit = 10L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000300000000"),
+                            Quota = "Branches",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000302000004"),
+                            Limit = 10L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000300000000"),
+                            Quota = "Warehouses",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000302000005"),
+                            Limit = 50000L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000300000000"),
+                            Quota = "Products",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000302000006"),
+                            Limit = 50000L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000300000000"),
+                            Quota = "Customers",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000302000007"),
+                            PlanId = new Guid("019a0000-0000-7000-8000-000300000000"),
+                            Quota = "Prospects",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000302000008"),
+                            Limit = 20000L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000300000000"),
+                            Quota = "SalesDocuments",
+                            ReturnsOnCancel = true
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000302000009"),
+                            Limit = 26843545600L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000300000000"),
+                            Quota = "FileStorageBytes",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000302000010"),
+                            Limit = 500L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000300000000"),
+                            Quota = "InvoiceStamps",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000302000011"),
+                            Limit = 5000L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000300000000"),
+                            Quota = "BusinessEmails",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000302000012"),
+                            Limit = 10737418240L,
+                            PlanId = new Guid("019a0000-0000-7000-8000-000300000000"),
+                            Quota = "TaxDocumentStorageBytes",
+                            ReturnsOnCancel = false
+                        },
+                        new
+                        {
+                            Id = new Guid("019a0000-0000-7000-8000-000302000013"),
+                            PlanId = new Guid("019a0000-0000-7000-8000-000300000000"),
+                            Quota = "AuditQueryWindowDays",
+                            ReturnsOnCancel = false
+                        });
+                });
+
+            modelBuilder.Entity("DanmaobErp.Domain.Plans.PlanModule", b =>
+                {
+                    b.HasOne("DanmaobErp.Domain.Plans.Plan", null)
+                        .WithMany()
+                        .HasForeignKey("PlanId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DanmaobErp.Domain.Plans.PlanQuota", b =>
+                {
+                    b.HasOne("DanmaobErp.Domain.Plans.Plan", null)
+                        .WithMany()
+                        .HasForeignKey("PlanId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
 #pragma warning restore 612, 618
         }
     }
