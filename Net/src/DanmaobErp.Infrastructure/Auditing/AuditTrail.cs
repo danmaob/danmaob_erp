@@ -57,7 +57,8 @@ public static class AuditTrail
             }
             else
             {
-                changeTracker.Context.Add(new PlatformAuditEntry(null, occurredAt, currentActor.ActorType, currentActor.ActorId, entityType, entityId, operation, beforeState, afterState));
+                var scope = entry.Entity as IPlatformAuditScope;
+                changeTracker.Context.Add(new PlatformAuditEntry(scope?.AuditClientAccountId, scope?.AuditTenantId, occurredAt, currentActor.ActorType, currentActor.ActorId, entityType, entityId, operation, beforeState, afterState));
             }
         }
     }
