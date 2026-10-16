@@ -10,6 +10,7 @@ public sealed class PlatformAuditEntryConfiguration : IEntityTypeConfiguration<P
     {
         builder.ToTable("PlatformAuditEntries", DatabaseSchemas.Platform);
         builder.Property(e => e.Id);
+        builder.Property(e => e.ClientAccountId);
         builder.Property(e => e.TenantId);
         builder.Property(e => e.OccurredAt);
         builder.Property(e => e.ActorType).HasConversion<string>().HasMaxLength(20);
@@ -21,5 +22,6 @@ public sealed class PlatformAuditEntryConfiguration : IEntityTypeConfiguration<P
         builder.Property(e => e.AfterState);
         builder.HasIndex(e => e.OccurredAt);
         builder.HasIndex(e => new { e.EntityType, e.EntityId });
+        builder.HasIndex(e => new { e.ClientAccountId, e.OccurredAt });
     }
 }
